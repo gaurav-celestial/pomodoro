@@ -1,0 +1,9 @@
+.model-ul {
+  list-style: none;
+  text-align: center;
+}
+
+.model-ul li {
+  /* color: rgb(0, 168, 0); */
+  font-size: 14px;
+}

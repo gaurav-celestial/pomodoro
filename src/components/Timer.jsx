@@ -1,12 +1,17 @@
 import { useEffect, useState } from "react";
 import "./Timer.css";
 
+import Modal from "./Modal";
+
 import RadioButtonUncheckedIcon from "@mui/icons-material/RadioButtonUnchecked";
+import RadioButtonCheckedIcon from "@mui/icons-material/RadioButtonChecked";
 
 let myInterval;
+let timeBreakpoint;
+
 export default function Timer({ currentTask }) {
-  console.log(currentTask);
   const [currentTaskState, setCurrentTaskState] = useState(currentTask || null);
+  const [showModal, setShowModal] = useState(false);
 
   const [taskTimer, setTaskTimer] = useState({
     min: currentTaskState.totalTimer || null,
@@ -26,6 +31,8 @@ export default function Timer({ currentTask }) {
 
   const [isTaskStarted, setIsTaskStarted] = useState(false);
   const [isBreakStarted, setIsBreakStarted] = useState(true);
+
+  const [summaryJsx, setSummaryJsx] = useState("");
 
   let timerNo = isTaskTimerRunning ? setTaskTimer : setBreakTimer;
 
@@ -115,14 +122,62 @@ export default function Timer({ currentTask }) {
   };
 
   const setChecked = (val) => {
-    const totalTime = currentTaskState.totalTimer * 60;
     const currentSecRemaining = taskTimer.min * 60 + taskTimer.sec;
     const selectedTaskTime = val.timer * 60;
-    console.log("Total Seconds " + totalTime);
-    console.log("remaining seconds " + currentSecRemaining);
-    console.log(totalTime - currentSecRemaining);
-    console.log("selected task time " + selectedTaskTime);
-    console.log(val);
+
+    console.log(timeBreakpoint);
+
+    console.log(
+      "you took ",
+      timeBreakpoint
+        ? timeBreakpoint - currentSecRemaining
+        : currentTaskState.totalTimer * 60 - currentSecRemaining
+    );
+
+    const timeTook = timeBreakpoint
+      ? timeBreakpoint - currentSecRemaining
+      : currentTaskState.totalTimer * 60 - currentSecRemaining;
+
+    const savedOrWastedTime = selectedTaskTime - timeTook;
+
+    timeBreakpoint = currentSecRemaining;
+
+    const newArr = currentTaskState.taskGroup.tasks.filter(
+      (task) => task !== val
+    );
+    newArr.push({ ...val, isChecked: true, timeTook, savedOrWastedTime });
+
+    setCurrentTaskState((prev) => {
+      return {
+        ...prev,
+        taskGroup: { ...prev.taskGroup, tasks: newArr },
+      };
+    });
+  };
+
+  useEffect(() => {
+    const temp = currentTaskState.taskGroup.tasks.every(
+      (task) => task.isChecked
+    );
+    if (temp) {
+      setIsTaskTimerRunning(false);
+      setActiveTimer("break");
+      console.log("task over");
+      setShowModal(true);
+    }
+  }, [currentTaskState]);
+
+  const startBreak = (tempSummaryJsx, totalTimeSaved) => {
+    setIsBreakTimerRunning(true);
+    setShowModal(false);
+    const finalSummaryJsx = (
+      <>
+        {tempSummaryJsx}
+        <p>Total {totalTimeSaved} secodns saved</p>
+      </>
+    );
+
+    setSummaryJsx(finalSummaryJsx);
   };
 
   let content;
@@ -217,18 +272,30 @@ export default function Timer({ currentTask }) {
               </div>
 
               {currentTaskState.taskGroup.tasks.map((task) => {
-                return (
-                  <li key={task.task} className="timer-task-card">
-                    <RadioButtonUncheckedIcon
-                      onClick={() => setChecked(task)}
-                      className="unchecked-btn"
-                    />
-                    {task.task}
-                  </li>
-                );
+                if (task.isChecked) {
+                  return (
+                    <li key={task.task} className="timer-task-card">
+                      <RadioButtonCheckedIcon className="unchecked-btn" />
+                      {task.task}
+                      <p>{task.timeTook + " Sec" || ""}</p>
+                    </li>
+                  );
+                } else {
+                  return (
+                    <li key={task.task} className="timer-task-card">
+                      <RadioButtonUncheckedIcon
+                        onClick={() => setChecked(task)}
+                        className="unchecked-btn"
+                      />
+                      {task.task}
+                    </li>
+                  );
+                }
               })}
             </ul>
           </div>
+
+          {summaryJsx}
         </div>
 
         <div
@@ -296,6 +363,9 @@ export default function Timer({ currentTask }) {
             </div>
           )}
         </div>
+        {showModal && (
+          <Modal startBreak={startBreak} currentTaskState={currentTaskState} />
+        )}
       </div>
     );
   }

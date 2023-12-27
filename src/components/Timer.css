@@ -97,6 +97,14 @@ body {
   box-shadow: rgba(100, 100, 111, 0.2) 0px 3px 14px 0px;
   border-radius: 10px;
   margin-top: 5px;
+  position: relative;
+}
+
+.timer-task-card p {
+  position: absolute;
+  right: 10px;
+  color: rgb(0, 185, 0);
+  font-style: italic;
 }
 
 .timer-tasks-card {
