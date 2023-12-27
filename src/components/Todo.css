@@ -1,0 +1,126 @@
+.modal {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translateY(-50%) translateX(-50%);
+  background-color: #fefefe;
+  border-radius: 10px;
+  padding: 20px;
+  min-height: 300px;
+  width: 400px;
+  z-index: 3;
+}
+
+.overlay {
+  position: fixed; /* Sit on top of the page content */
+  display: block; /* Hidden by default */
+  width: 100%; /* Full width (cover the whole page) */
+  height: 100%; /* Full height (cover the whole page) */
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5); /* Black background with opacity */
+  z-index: 2; /* Specify a stack order in case you're using a different order for other elements */
+  cursor: pointer;
+}
+
+.add-task-container {
+  display: flex;
+  align-items: center;
+  margin-left: 2px;
+}
+
+.todos {
+  margin-bottom: 5px;
+}
+hr {
+  opacity: 0.5;
+  margin: 20px;
+}
+
+.add-task-container h5 {
+  margin-left: 20px;
+  text-align: center;
+}
+
+.todo input {
+  border-radius: 8px;
+  padding: 6px 12px;
+  border: 1px solid black;
+}
+
+.todo button {
+  margin-left: 5px;
+  color: white;
+  background-color: black;
+  padding: 8px;
+  border-radius: 8px;
+}
+
+.todo-ul {
+  list-style: none;
+}
+
+.todo-ul {
+  margin: 6px 0;
+}
+
+.todo-ul li {
+  background-color: #fff;
+  border: 1px solid rgb(214, 214, 214);
+  box-shadow: rgba(100, 100, 111, 0.2) 0px 3px 14px 0px;
+  margin: 3px;
+  border-radius: 6px;
+  padding: 10px;
+  width: 245px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.timer-input {
+  width: 80px;
+  background-color: #fff;
+  border: 1px solid rgb(214, 214, 214);
+  box-shadow: rgba(100, 100, 111, 0.2) 0px 3px 14px 0px;
+  margin: 3px;
+  border-radius: 6px;
+  padding: 10px;
+}
+
+.list-item {
+  display: flex;
+  justify-content: stretch;
+  align-items: stretch;
+}
+
+.delete-icon {
+  justify-self: flex-end;
+}
+
+.submit-btn-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.task-title,
+.task-desc {
+  margin: 10px 0;
+  display: flex;
+  /* justify-content: center; */
+  gap: 10px;
+  align-items: center;
+}
+
+.task-title h4,
+.task-desc h4 {
+  width: 100px;
+}
+
+.task-desc textarea {
+  border-radius: 8px;
+  padding: 6px 12px;
+  border: 1px solid black;
+  width: 195px;
+}

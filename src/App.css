@@ -1,0 +1,214 @@
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background-color: #fefefe;
+}
+
+.container {
+  height: 100vh;
+  display: flex;
+}
+
+.column1 {
+  width: 20%;
+  padding: 50px 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.column2 {
+  width: 40%;
+  padding: 50px;
+}
+.column3 {
+  width: 40%;
+  padding: 50px;
+}
+
+.column1 button {
+  display: block;
+  font-size: 15px;
+  padding: 20px 30px;
+  width: 100%;
+  border-top-right-radius: 20px;
+  border-bottom-right-radius: 20px;
+}
+.page-btn {
+  align-self: stretch;
+}
+
+.logo {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+}
+
+.active-page {
+  background-color: black;
+  color: white;
+}
+
+.active-tab {
+  color: #f6b816;
+}
+
+.primary-heading {
+  font-size: 35px;
+}
+
+.greet-heading {
+  opacity: 0.8;
+  font-weight: 400;
+}
+
+.search-box {
+  padding: 15px 10px;
+  width: 400px;
+  margin-top: 20px;
+  margin-bottom: 30px;
+  border-radius: 10px;
+  border: none;
+  background-color: #f5f5f5;
+}
+
+.btn-group {
+  display: flex;
+  justify-content: space-between;
+  width: 400px;
+  margin: 15px 0;
+}
+
+button {
+  border: none;
+  cursor: pointer;
+  font-weight: bold;
+  color: #606060;
+  /* padding: 10px; */
+  /* margin-right: 30px; */
+}
+
+.card {
+  /* height: 150px; */
+  width: 400px;
+  background-color: white;
+  padding: 15px;
+  box-shadow: rgba(100, 100, 111, 0.2) 0px 3px 14px 0px;
+  border-radius: 10px;
+  margin-top: 15px;
+}
+
+.task-1 h5 {
+  font-size: 20px;
+  margin: 0px;
+}
+
+.task-1 p {
+  margin-bottom: 5px;
+  margin-top: 0;
+  opacity: 0.8;
+}
+
+.profile img {
+  border-radius: 100px;
+}
+
+.profile {
+  display: flex;
+  justify-content: space-between;
+  width: 400px;
+}
+.profile-data {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.icons {
+  display: flex;
+  align-items: center;
+  margin-left: 100px;
+}
+
+.noti-icon {
+  cursor: pointer;
+}
+
+.email-icon {
+  cursor: pointer;
+  margin-left: 15px;
+}
+
+.project-timer {
+  margin-top: 30px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.play-btn {
+  height: 40px;
+  width: 40px;
+  background-color: #f6b816;
+  border-radius: 50px;
+}
+.add-task {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 400px;
+  margin-top: 20px;
+}
+
+.add-task button {
+  background-color: black;
+  padding: 17px 30px;
+  color: white;
+  border-radius: 10px;
+}
+
+.current-date {
+  font-size: 20px;
+}
+
+.current-date span {
+  font-size: 30px;
+  font-weight: bold;
+}
+
+.timer-span {
+  /* background-color: green; */
+  /* color: white; */
+  font-size: 12px;
+  padding: 2px;
+  margin-left: 2px;
+  font-weight: bold;
+}
+
+.tasks li {
+  font-size: 15px;
+  margin: 5px;
+  /* list-style: none; */
+}
+
+.play-btn {
+  color: black;
+}
+
+.start-timer {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  margin-top: 10px;
+}
+
+.start-timer p {
+  font-size: 15px;
+  font-weight: bold;
+  color: black;
+}

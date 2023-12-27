@@ -1,0 +1,137 @@
+body {
+  background-color: white;
+}
+
+.active {
+  background-color: rgb(237, 236, 236);
+}
+
+.read-the-docs {
+  color: #888;
+}
+
+.timer-container h1 {
+  margin-bottom: 0;
+}
+
+.timer-container h2 {
+  text-align: center;
+  margin-top: 10px !important;
+  font-size: 40px;
+}
+
+.timers-container {
+  display: flex;
+  text-align: center;
+}
+
+.timer-container {
+  width: 50%;
+  height: 100vh;
+}
+
+.timers-container h1 {
+  font-size: 30px;
+  margin-top: 10px;
+}
+
+.time {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.time div {
+  background-color: white;
+  box-shadow: rgba(100, 100, 111, 0.2) 0px 3px 14px 0px;
+  margin: 2px;
+  border-radius: 6px;
+  text-align: center;
+  padding: 0 10px;
+}
+
+.start-stop {
+  margin-top: 20px;
+  margin-right: 5px;
+  background-color: black;
+  padding: 11px 26px;
+  color: white;
+}
+
+.reset {
+  /* background-color: white; */
+  box-sizing: border-box;
+  border: 1px solid black;
+  padding: 10px 25px;
+  color: black;
+}
+
+.task-list {
+  padding: 40px;
+}
+
+.task-list li {
+  gap: 10px;
+  align-items: center;
+  display: flex;
+}
+
+.task-list ul {
+  margin-top: 10px;
+  text-align: left;
+  list-style: none;
+}
+
+.task-list h2 {
+  margin-bottom: 5px;
+  width: 280px;
+  font-size: 25px;
+  text-align: left;
+}
+
+.timer-task-card {
+  /* height: 150px; */
+  width: 400px;
+  background-color: white;
+  padding: 15px;
+  box-shadow: rgba(100, 100, 111, 0.2) 0px 3px 14px 0px;
+  border-radius: 10px;
+  margin-top: 5px;
+}
+
+.timer-tasks-card {
+  /* height: 150px; */
+  width: 440px;
+  background-color: white;
+  padding: 20px;
+  box-shadow: rgba(100, 100, 111, 0.2) 0px 3px 14px 0px;
+  border-radius: 10px;
+  margin: auto;
+  margin-top: 5px;
+}
+
+.taskgroup-details {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.taskgroup-desc {
+  margin-bottom: 20px;
+  opacity: 0.8;
+}
+.taskgroup-timer {
+  font-weight: bold;
+}
+
+.unchecked-btn {
+  cursor: pointer;
+}
+
+.start-timer-btn {
+  background-color: rgb(0, 0, 0);
+  padding: 5px 15px;
+  color: rgb(239, 239, 239);
+  font-size: 16px;
+  margin: 10px;
+}
