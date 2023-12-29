@@ -27,7 +27,7 @@ body {
 
 .timer-container {
   width: 50%;
-  height: 100vh;
+  min-height: 100vh;
 }
 
 .timers-container h1 {
@@ -142,4 +142,17 @@ body {
   color: rgb(239, 239, 239);
   font-size: 16px;
   margin: 10px;
+}
+
+.task-list-item {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+}
+
+.task-item-time {
+  width: 40px;
+  font-weight: bold;
+  font-size: 13px;
 }

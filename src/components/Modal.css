@@ -1,9 +1,33 @@
-.model-ul {
-  list-style: none;
-  text-align: center;
-}
-
 .model-ul li {
   /* color: rgb(0, 168, 0); */
   font-size: 14px;
+  padding: 3px;
+}
+
+.summary-ul {
+  font-weight: 600;
+  list-style-type: default;
+  text-align: left;
+  padding: 0 40px;
+  margin-left: 20px;
+  margin-bottom: 20px;
+}
+
+.model-ul {
+  font-weight: 600;
+  list-style-type: default;
+  text-align: left;
+  padding: 0 20px;
+  margin-left: 20px;
+}
+
+.saved {
+  color: green;
+}
+.wasted {
+  color: red;
+}
+
+.summary-modal-btn {
+  margin-top: 20px;
 }

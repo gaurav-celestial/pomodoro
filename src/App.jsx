@@ -11,10 +11,15 @@ import { useState } from "react";
 // ]);
 
 const App = () => {
+  // const navigate = useNavigate();
   const [currentTask, setCurrentTask] = useState(null);
 
   const handleCurrentTask = (val) => {
     setCurrentTask(val);
+  };
+
+  const updateTask = () => {
+    console.log("updated");
   };
 
   return (
@@ -24,7 +29,10 @@ const App = () => {
           path="/"
           element={<Homepage handleCurrentTask={handleCurrentTask} />}
         />
-        <Route path="/timer" element={<Timer currentTask={currentTask} />} />
+        <Route
+          path="/timer"
+          element={<Timer currentTask={currentTask} updateTask={updateTask} />}
+        />
       </Routes>
     </Router>
   );

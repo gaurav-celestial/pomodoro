@@ -86,6 +86,7 @@ const Form = ({ onRemove, tasksSubmit }) => {
                     name={`timer` + (i + 1)}
                     className="timer-input"
                     type="number"
+                    min="0"
                     placeholder="5"
                   />
                 </div>
