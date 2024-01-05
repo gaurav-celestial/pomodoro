@@ -1,8 +1,9 @@
 import "./Todo.css";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import DeleteIcon from "@mui/icons-material/Delete";
+import axios from "axios";
 
-const Form = ({ onRemove, tasksSubmit }) => {
+const Form = ({ onRemove, tasksSubmit, setActiveTabToDefault }) => {
   const [currentTask, setCurrentTask] = useState("");
   const [tasks, setTaskGroup] = useState([]);
 
@@ -24,6 +25,7 @@ const Form = ({ onRemove, tasksSubmit }) => {
     const data = Object.fromEntries(fd.entries());
 
     const allTasks = {
+      id: Math.random(),
       title: data.title,
       desc: data.desc,
       tasks: tasks.map((task, i) => {
@@ -33,24 +35,42 @@ const Form = ({ onRemove, tasksSubmit }) => {
         };
       }),
     };
+
+    async function updateTasks() {
+      await axios({
+        method: "POST",
+        url: "http://localhost:5000/api/taskGroups",
+        data: {
+          allTasks,
+        },
+      });
+    }
+    updateTasks();
+
     console.log(allTasks);
     onRemove();
     tasksSubmit(allTasks);
+    setActiveTabToDefault();
   };
 
   return (
     <>
       <div className="todo modal">
         <form onSubmit={submitHandler}>
-          <h2>Add Task Group</h2>
+          <h2 className="add-task-group-btn">Add Task Group</h2>
           <div className="task-title">
             <h4>Title</h4>
-            <input name="title" className="add-task-title" type="text" />
+            <input
+              name="title"
+              required
+              className="add-task-title"
+              type="text"
+            />
           </div>
 
           <div className="task-desc">
             <h4>Description</h4>
-            <textarea name="desc" rows="3"></textarea>
+            <textarea required name="desc" rows="3"></textarea>
             {/* <input className="add-task-desc" type="text" /> */}
           </div>
 
@@ -86,7 +106,7 @@ const Form = ({ onRemove, tasksSubmit }) => {
                     name={`timer` + (i + 1)}
                     className="timer-input"
                     type="number"
-                    min="0"
+                    min="1"
                     placeholder="5"
                   />
                 </div>

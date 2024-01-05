@@ -7,21 +7,21 @@ const Modal = ({ currentTaskState, startBreak, activeTimer, updateTask }) => {
   console.log(activeTimer);
 
   content = currentTaskState.taskGroup.tasks.map((task, i) => {
+    console.log(task);
     totalTimeSavedorWasted += task.savedOrWastedTime || -task.timer * 60;
-
     return (
       <>
         <li key={i}>
           {task.task}{" "}
-          {task.timeTook
-            ? `Completed in ${task.timeTook} Seconds `
+          {task.timeTookInSeconds
+            ? `Completed in ${task.timeTookInSeconds} Seconds `
             : `Not Completed `}
           {task.savedOrWastedTime >= 0 &&
             `-- ${task.savedOrWastedTime} Seconds Saved`}
           {task.savedOrWastedTime <= 0 &&
-            `${Math.abs(task.savedOrWastedTime)} Seconds Wasted`}
+            `-- ${Math.abs(task.savedOrWastedTime)} Seconds Wasted`}
           {isNaN(task.savedOrWastedTime) &&
-            `${Math.abs(task.timer * 60)} Seconds Wasted`}
+            `-- ${Math.abs(task.timer * 60)} Seconds Wasted`}
         </li>
       </>
     );

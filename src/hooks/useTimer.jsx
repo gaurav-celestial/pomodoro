@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-export const TimerHook = (currentTask, myInterval) => {
+export const useTimer = (currentTask, myInterval) => {
   const [showStartTimerButton, setShowStartTimerButton] = useState(true);
   const [currentTaskState, setCurrentTaskState] = useState(currentTask || null);
   const [showModal, setShowModal] = useState(false);
@@ -12,8 +12,8 @@ export const TimerHook = (currentTask, myInterval) => {
   });
 
   const [breakTimer, setBreakTimer] = useState({
-    min: 1,
-    sec: 0,
+    min: 10,
+    sec: 3,
     mili: 1000,
   });
 

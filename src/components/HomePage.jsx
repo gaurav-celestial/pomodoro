@@ -1,18 +1,38 @@
 import "./Homepage.css";
 
-import { useState } from "react";
-import ProfileImg from "../assets/profile.png";
+import { useEffect, useRef, useState } from "react";
+// import ProfileImg from "../assets/profile.jpg";
 import Logo from "../assets/logo.png";
-
-import NotificationsIcon from "@mui/icons-material/Notifications";
-import EmailIcon from "@mui/icons-material/Email";
-import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import Todo from "./Todo";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import GenerateRecentlyCards from "./GenerateRecentlyCards";
+import GenerateCompletedCards from "./GenerateCompletedCards";
+import GenerateIncompletedCards from "./GenerateIncompletedCards";
 
 function Homepage({ handleCurrentTask }) {
   const [modalState, setModalState] = useState(false);
   const [taskGroups, setTaskGroups] = useState([]);
+  const [activeTab, setActiveTab] = useState("Recently");
+  const [activeTabContent, setActiveTabContent] = useState();
+  const [mode, setMode] = useState("mode1");
+  const [user, setUser] = useState({
+    user: "Guest",
+    image: "default",
+    profession: "",
+  });
+
+  const selectRef = useRef();
+
+  const date = new Date();
+  let options = {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  };
+
+  const formattedDate = Intl.DateTimeFormat("en-in", options).format(date);
+
   const navigate = useNavigate();
 
   const closeModal = function () {
@@ -32,111 +52,215 @@ function Homepage({ handleCurrentTask }) {
     navigate("/timer");
   };
 
+  const setActiveTabToDefault = () => {
+    setActiveTab("Recently");
+  };
+
+  console.log(user);
+
+  useEffect(() => {
+    const user = JSON.parse(localStorage.getItem("user"));
+    if (user) setUser(user);
+  }, []);
+
+  useEffect(() => {
+    async function fetchTaskGroups() {
+      const res = await axios({
+        method: "get",
+        url: "http://localhost:5000/api/taskGroups",
+      });
+      setTaskGroups(res.data);
+    }
+    fetchTaskGroups();
+  }, []);
+
+  useEffect(() => {
+    if (activeTab === "Recently") {
+      const recently = taskGroups.filter((taskGroup) => {
+        const temp = taskGroup.tasks.every((task) => {
+          return task.isChecked === undefined;
+        });
+        return temp;
+      });
+      setActiveTabContent(recently);
+    }
+
+    if (activeTab === "Completed") {
+      const recently = taskGroups.filter((taskGroup) => {
+        const temp = taskGroup.tasks.every((task) => {
+          return task.isChecked === true;
+        });
+        return temp;
+      });
+
+      setActiveTabContent(recently);
+    }
+
+    if (activeTab === "Incompleted") {
+      const recently = taskGroups.filter((taskGroup) => {
+        const temp = taskGroup.tasks.some((task) => {
+          return task.isChecked === false;
+        });
+        return temp;
+      });
+      setActiveTabContent(recently);
+    }
+  }, [activeTab, taskGroups]);
+
   return (
     <>
-      <div className="container">
-        <div className="column column1">
-          <img className="logo" src={Logo} alt="logo" width="70" />
-          <div className="page-btn">
-            <button className="active-page">Dashboard</button>
-            <button>Analytics</button>
-            <button>Settings</button>
+      <div
+        className={`container ${
+          mode === "mode2" ? "mode2-container" : undefined
+        }`}
+      >
+        <div className="header">
+          <div className="logo-container">
+            <img className="logo" src={Logo} alt="logo" width="70" />
+            <select
+              ref={selectRef}
+              onChange={() => {
+                setMode(selectRef.current.value);
+              }}
+              name="mode"
+              id="mode"
+            >
+              <option value="mode1">Mode 1</option>
+              <option value="mode2">Mode 2</option>
+            </select>
+          </div>
+          <div className="profile-data">
+            <div className="profile-details">
+              <h4 className="name">{user.user}</h4>
+              <p className="designation">{user.profession}</p>
+            </div>
+            <img src={`/src/assets/${user.image}.jpg`} width={50} alt="hello" />
+            {user.user === "Guest" ? (
+              <button
+                onClick={() => {
+                  navigate("/login");
+                }}
+                className={`login-btn ${
+                  mode === "mode2" ? "mode2-login-btn" : ""
+                }`}
+              >
+                Login
+              </button>
+            ) : (
+              <button
+                onClick={() => {
+                  localStorage.removeItem("user");
+                  setUser({
+                    user: "Guest",
+                    image: "default",
+                    profession: "",
+                  });
+                }}
+                className={`login-btn ${
+                  mode === "mode2" ? "mode2-login-btn" : ""
+                }`}
+              >
+                Logout
+              </button>
+            )}
           </div>
         </div>
-        <div className="column column2">
-          <h4 className="greet-heading">Hello Gaurav!</h4>
-          <h1 className="primary-heading">
-            You&apos;ve got <br /> 8 tasks today
-          </h1>
-          <input
-            className="search-box"
-            type="text"
-            placeholder="search something"
-          />
 
-          <h2>My tasks</h2>
-          {/* <div className="btn-group">
-          <button className="active-tab">Recently</button>
-          <button>Today</button>
-          <button>Upcoming</button>
-          <button>Later</button>
-        </div> */}
-          <div className="tasks">
-            {taskGroups.map((taskGroup) => {
-              let totalTimer = 0;
-              return (
-                <div key={taskGroup.title} className="task-1 card">
-                  <h5 className="task-title">{taskGroup.title}</h5>
-                  <p>{taskGroup.desc}</p>
-                  <h5>Tasks</h5>
-                  {taskGroup.tasks.map((task) => {
-                    totalTimer = totalTimer + task.timer;
-                    return (
-                      <li key={task.task}>
-                        {task.task} -
-                        <span className="timer-span">{task.timer} min</span>
-                      </li>
-                    );
-                  })}
-
-                  <div className="start-timer">
-                    <p> Start Timer {totalTimer} min </p>
-                    <button>
-                      <PlayArrowIcon
-                        onClick={() => playTimer({ taskGroup, totalTimer })}
-                        className="play-btn"
-                      />
-                    </button>
-                  </div>
-                </div>
-              );
-            })}
-            <div className="task-1 card">No tasks here</div>
-          </div>
-        </div>
-        <div className="column column3">
-          <div className="profile">
-            <div className="profile-data">
-              <img src={ProfileImg} width={50} alt="hello" />
-              <div className="profile-details">
-                <h4 className="name">Gaurav Yadav</h4>
-                <p className="designation">Web Developer</p>
+        <div className="columns">
+          <div className="column column2">
+            <h2>My tasks</h2>
+            <div className="btn-group">
+              <button
+                onClick={() => {
+                  setActiveTab("Recently");
+                }}
+                className={`tab-btn ${
+                  activeTab === "Recently" &&
+                  `active-tab ${
+                    mode === "mode2" ? " mode2-active-tab" : undefined
+                  } `
+                }`}
+              >
+                Recently
+              </button>
+              <button
+                onClick={() => {
+                  setActiveTab("Completed");
+                }}
+                className={`tab-btn ${
+                  activeTab === "Completed" &&
+                  `active-tab ${
+                    mode === "mode2" ? "active-tab mode2-active-tab" : undefined
+                  } `
+                }`}
+              >
+                Completed
+              </button>
+              <button
+                onClick={() => {
+                  setActiveTab("Incompleted");
+                }}
+                className={`tab-btn ${
+                  activeTab === "Incompleted" &&
+                  `active-tab ${
+                    mode === "mode2" ? "active-tab mode2-active-tab" : undefined
+                  } `
+                }`}
+              >
+                Incompleted
+              </button>
+            </div>
+            <div className="tasks">
+              <div>
+                {activeTab === "Recently" && (
+                  <>
+                    <GenerateRecentlyCards
+                      playTimer={playTimer}
+                      activeTabContent={activeTabContent}
+                      onClick={showModal}
+                      mode={mode}
+                    />
+                  </>
+                )}
+                {activeTab === "Completed" && (
+                  <>
+                    <GenerateCompletedCards
+                      playTimer={playTimer}
+                      activeTabContent={activeTabContent}
+                    />
+                  </>
+                )}
+                {activeTab === "Incompleted" && (
+                  <>
+                    <GenerateIncompletedCards
+                      playTimer={playTimer}
+                      activeTabContent={activeTabContent}
+                    />
+                  </>
+                )}
               </div>
             </div>
-            <div className="icons">
-              <p className="noti-icon">
-                <NotificationsIcon />
-              </p>
-              <p className="email-icon">
-                <EmailIcon />
-              </p>
-            </div>
           </div>
-
-          <div className="project-timer card">
-            <div className="card-content">
-              <h5>Project Time Tracker</h5>
-              <p>You can add a timer</p>
+          <div className="column column3">
+            <div className="add-task">
+              <div className="current-date">
+                {formattedDate}
+                <br />
+                <span>Today</span>
+              </div>
+              <button onClick={showModal}>+ Add Task</button>
             </div>
-            <button>
-              <PlayArrowIcon className="play-btn" />
-            </button>
-          </div>
-
-          <div className="add-task">
-            <div className="current-date">
-              December 22, 2023
-              <br />
-              <span>Today</span>
-            </div>
-            <button onClick={showModal}>+ Add Task</button>
           </div>
         </div>
       </div>
 
       {modalState && (
         <div className="div">
-          <Todo onRemove={closeModal} tasksSubmit={tasksSubmit} />
+          <Todo
+            setActiveTabToDefault={setActiveTabToDefault}
+            onRemove={closeModal}
+            tasksSubmit={tasksSubmit}
+          />
         </div>
       )}
     </>

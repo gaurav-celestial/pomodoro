@@ -3,6 +3,8 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 import Homepage from "./components/HomePage";
 import Timer from "./components/Timer";
+import Login from "./components/Login";
+import Signup from "./components/Signup";
 import { useState } from "react";
 
 // const router = createBrowserRouter([
@@ -18,10 +20,6 @@ const App = () => {
     setCurrentTask(val);
   };
 
-  const updateTask = () => {
-    console.log("updated");
-  };
-
   return (
     <Router>
       <Routes>
@@ -29,10 +27,9 @@ const App = () => {
           path="/"
           element={<Homepage handleCurrentTask={handleCurrentTask} />}
         />
-        <Route
-          path="/timer"
-          element={<Timer currentTask={currentTask} updateTask={updateTask} />}
-        />
+        <Route path="/timer" element={<Timer currentTask={currentTask} />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<Signup />} />
       </Routes>
     </Router>
   );
