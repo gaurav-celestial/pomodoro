@@ -182,14 +182,14 @@ export default function Timer({ currentTask }) {
     console.log("updated");
     console.log(currentTaskState);
 
-    async function updateTask() {
+    async function updateApiTask() {
       await axios({
         method: "put",
         url: "http://localhost:5000/api/taskGroups",
         data: { currentTaskState },
       });
     }
-    updateTask();
+    updateApiTask();
     timeBreakpoint = undefined;
     navigate("/");
   };

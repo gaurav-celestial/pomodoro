@@ -74,6 +74,8 @@ function Homepage({ handleCurrentTask }) {
     fetchTaskGroups();
   }, []);
 
+  console.log(taskGroups);
+
   useEffect(() => {
     if (activeTab === "Recently") {
       const recently = taskGroups.filter((taskGroup) => {
