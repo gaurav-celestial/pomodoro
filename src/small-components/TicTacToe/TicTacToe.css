@@ -1,0 +1,48 @@
+.row {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.cell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  border: 1px solid;
+  height: 80px;
+  width: 80px;
+  font-size: 40px;
+  background-color: white;
+}
+
+.winner {
+  text-align: center;
+}
+
+.tic-tac-toe-again {
+  position: absolute;
+  left: 50%;
+  transform: translate(-50%);
+  background-color: #f6b816;
+  color: black;
+  border-radius: 10px;
+  padding: 10px 30px;
+  margin-top: 10px;
+}
+
+.mode2-tic-tac-toe-game {
+  background-color: #191919;
+}
+
+.mode2-tic-tac-toe-game .cell {
+  background-color: #191919;
+  border: 1px solid black;
+}
+/* 
+.tic-tac-toe-container {
+  position: absolute;
+  left: 50%;
+  top: 13%;
+  transform: translateX(-50%);
+} */

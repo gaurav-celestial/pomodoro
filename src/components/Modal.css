@@ -31,3 +31,8 @@
 .summary-modal-btn {
   margin-top: 20px;
 }
+
+.small-modal {
+  min-height: 200px;
+  width: 350px;
+}

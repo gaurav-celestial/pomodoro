@@ -1,6 +1,6 @@
 import "./Homepage.css";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 // import ProfileImg from "../assets/profile.jpg";
 import Logo from "../assets/logo.png";
 import Todo from "./Todo";
@@ -9,20 +9,29 @@ import axios from "axios";
 import GenerateRecentlyCards from "./GenerateRecentlyCards";
 import GenerateCompletedCards from "./GenerateCompletedCards";
 import GenerateIncompletedCards from "./GenerateIncompletedCards";
+import Dropdown from "./Dropdown";
+import Switch from "../small-components/Switch";
+
+import { useDispatch, useSelector } from "react-redux";
+import { settingsActions } from "../store";
+
+import { timerActions } from "../store/index.js";
 
 function Homepage({ handleCurrentTask }) {
   const [modalState, setModalState] = useState(false);
   const [taskGroups, setTaskGroups] = useState([]);
   const [activeTab, setActiveTab] = useState("Recently");
   const [activeTabContent, setActiveTabContent] = useState();
-  const [mode, setMode] = useState("mode1");
   const [user, setUser] = useState({
     user: "Guest",
     image: "default",
     profession: "",
   });
 
-  const selectRef = useRef();
+  let timerStatus = useSelector((state) => state.timer?.timerStatus?.payload);
+
+  const mode = useSelector((state) => state.settings.mode);
+  const dispatch = useDispatch();
 
   const date = new Date();
   let options = {
@@ -49,14 +58,35 @@ function Homepage({ handleCurrentTask }) {
 
   const playTimer = (val) => {
     handleCurrentTask(val);
-    navigate("/timer");
+    navigate(`/timer`);
   };
 
   const setActiveTabToDefault = () => {
     setActiveTab("Recently");
   };
 
-  console.log(user);
+  useEffect(() => {
+    if (
+      timerStatus?.showModal === "break-end" ||
+      timerStatus?.showModal === "break-end-auto"
+    ) {
+      console.log("here");
+      dispatch(timerActions.clearState());
+      console.log(timerStatus?.showModal);
+    }
+  }, [timerStatus, dispatch, navigate]);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (timerStatus) {
+        navigate("/timer");
+      }
+    }, 100);
+
+    return () => {
+      clearTimeout(timer);
+    };
+  }, [timerStatus, navigate]);
 
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem("user"));
@@ -73,8 +103,6 @@ function Homepage({ handleCurrentTask }) {
     }
     fetchTaskGroups();
   }, []);
-
-  console.log(taskGroups);
 
   useEffect(() => {
     if (activeTab === "Recently") {
@@ -109,63 +137,38 @@ function Homepage({ handleCurrentTask }) {
     }
   }, [activeTab, taskGroups]);
 
+  const logout = (event) => {
+    localStorage.removeItem("user");
+    setUser({
+      user: "Guest",
+      image: "default",
+      profession: "",
+    });
+  };
+
   return (
     <>
       <div
         className={`container ${
-          mode === "mode2" ? "mode2-container" : undefined
+          mode === "dark" ? "mode2-container" : undefined
         }`}
       >
         <div className="header">
           <div className="logo-container">
             <img className="logo" src={Logo} alt="logo" width="70" />
-            <select
-              ref={selectRef}
-              onChange={() => {
-                setMode(selectRef.current.value);
+            <Switch
+              onClick={() => {
+                console.log("switching");
+                dispatch(
+                  mode === "light"
+                    ? settingsActions.changeModeToDark()
+                    : settingsActions.changeModeToLight()
+                );
               }}
-              name="mode"
-              id="mode"
-            >
-              <option value="mode1">Mode 1</option>
-              <option value="mode2">Mode 2</option>
-            </select>
+            />
+            <p>{mode === "light" ? "Light" : "Dark"}</p>
           </div>
-          <div className="profile-data">
-            <div className="profile-details">
-              <h4 className="name">{user.user}</h4>
-              <p className="designation">{user.profession}</p>
-            </div>
-            <img src={`/src/assets/${user.image}.jpg`} width={50} alt="hello" />
-            {user.user === "Guest" ? (
-              <button
-                onClick={() => {
-                  navigate("/login");
-                }}
-                className={`login-btn ${
-                  mode === "mode2" ? "mode2-login-btn" : ""
-                }`}
-              >
-                Login
-              </button>
-            ) : (
-              <button
-                onClick={() => {
-                  localStorage.removeItem("user");
-                  setUser({
-                    user: "Guest",
-                    image: "default",
-                    profession: "",
-                  });
-                }}
-                className={`login-btn ${
-                  mode === "mode2" ? "mode2-login-btn" : ""
-                }`}
-              >
-                Logout
-              </button>
-            )}
-          </div>
+          <Dropdown user={user} logout={logout} />
         </div>
 
         <div className="columns">
@@ -179,7 +182,7 @@ function Homepage({ handleCurrentTask }) {
                 className={`tab-btn ${
                   activeTab === "Recently" &&
                   `active-tab ${
-                    mode === "mode2" ? " mode2-active-tab" : undefined
+                    mode === "dark" ? " mode2-active-tab" : "tab-btn-unselected"
                   } `
                 }`}
               >
@@ -192,7 +195,9 @@ function Homepage({ handleCurrentTask }) {
                 className={`tab-btn ${
                   activeTab === "Completed" &&
                   `active-tab ${
-                    mode === "mode2" ? "active-tab mode2-active-tab" : undefined
+                    mode === "dark"
+                      ? "active-tab mode2-active-tab"
+                      : "tab-btn-unselected"
                   } `
                 }`}
               >
@@ -205,7 +210,9 @@ function Homepage({ handleCurrentTask }) {
                 className={`tab-btn ${
                   activeTab === "Incompleted" &&
                   `active-tab ${
-                    mode === "mode2" ? "active-tab mode2-active-tab" : undefined
+                    mode === "dark"
+                      ? "active-tab mode2-active-tab"
+                      : "tab-btn-unselected"
                   } `
                 }`}
               >
@@ -220,7 +227,6 @@ function Homepage({ handleCurrentTask }) {
                       playTimer={playTimer}
                       activeTabContent={activeTabContent}
                       onClick={showModal}
-                      mode={mode}
                     />
                   </>
                 )}

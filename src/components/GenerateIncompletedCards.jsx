@@ -1,6 +1,4 @@
-import PlayArrowIcon from "@mui/icons-material/PlayArrow";
-
-const GenerateIncompletedCards = ({ playTimer, activeTabContent }) => {
+const GenerateIncompletedCards = ({ playTimer, activeTabContent, mode }) => {
   console.log(activeTabContent);
   let totalTimeTook = 0;
 

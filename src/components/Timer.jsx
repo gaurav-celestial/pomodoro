@@ -1,8 +1,7 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import "./Timer.css";
 
 import BreakImg from "../assets/break.gif";
-
 import Modal from "./Modal";
 
 import RadioButtonUncheckedIcon from "@mui/icons-material/RadioButtonUnchecked";
@@ -11,12 +10,29 @@ import RadioButtonCheckedIcon from "@mui/icons-material/RadioButtonChecked";
 import { useTimer } from "../hooks/useTimer.jsx";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import Game from "./Game.jsx";
+import TicTacToe from "../small-components/TicTacToe/TicTacToe.jsx";
+import { useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
+import { timerActions } from "../store/index.js";
 
 let myInterval;
 let timeBreakpoint;
 
 export default function Timer({ currentTask }) {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const mode = useSelector((state) => state.settings.mode);
+  let timerStatus = useSelector((state) => state.timer?.timerStatus?.payload);
+
+  // if (timerStatus)
+  //   console.log(
+  //     timerStatus.currentTaskState.taskGroup.id === currentTask.taskGroup.id
+  //   );
+
+  const [gameMode, setGameMode] = useState(false);
+  const [confirmCheckedTask, setConfirmCheckedTask] = useState();
 
   const {
     isTaskTimerRunning,
@@ -50,7 +66,10 @@ export default function Timer({ currentTask }) {
     if (isBreakTimerRunning) setShowStartTimerButton(false);
     if (isTaskTimerRunning) setShowStartTimerButton(true);
 
-    if (isTaskTimerRunning || isBreakTimerRunning) {
+    if (
+      (isTaskTimerRunning && isTaskStarted) ||
+      (isBreakTimerRunning && isBreakStarted)
+    ) {
       myInterval = setInterval(() => {
         timerNo((prevState) => {
           return { ...prevState, mili: prevState.mili - 200 };
@@ -59,7 +78,7 @@ export default function Timer({ currentTask }) {
     }
 
     if (taskTimer.min === 0 && taskTimer.sec === 0) {
-      setShowModal(true);
+      setShowModal("summary");
       setIsTaskTimerRunning(false);
       setTaskTimer({
         min: currentTaskState.totalTimer,
@@ -91,19 +110,40 @@ export default function Timer({ currentTask }) {
     if (breakTimer.min === 0 && breakTimer.sec === 0) {
       setIsTaskTimerRunning(false);
       setIsBreakTimerRunning(false);
+
       // setBreakTimer({
       //   min: 10,
       //   sec: 59,
       //   mili: 1000,
       // });
-      setShowModal(true);
-
+      setShowModal("break-end-auto");
       // setActiveTimer("task");
       console.log("break over");
     }
 
     return () => {
       clearInterval(myInterval);
+
+      dispatch(
+        timerActions.updateState({
+          payload: {
+            isTaskTimerRunning,
+            isBreakTimerRunning,
+            taskTimer,
+            activeTimer,
+            isTaskStarted,
+            isBreakStarted,
+            breakTimer,
+            currentTaskState,
+            showModal,
+            showStartTimerButton,
+            confirmCheckedTask,
+            gameMode,
+            myInterval,
+            timeBreakpoint,
+          },
+        })
+      );
     };
   }, [
     isTaskTimerRunning,
@@ -121,7 +161,31 @@ export default function Timer({ currentTask }) {
     setCurrentTaskState,
     currentTaskState,
     showModal,
+    dispatch,
+    activeTimer,
+    isTaskStarted,
+    isBreakStarted,
+    showStartTimerButton,
+    confirmCheckedTask,
+    gameMode,
   ]);
+
+  useEffect(() => {
+    if (timerStatus || currentTaskState === timerStatus?.currentTaskState) {
+      setIsTaskTimerRunning(timerStatus.isTaskTimerRunning);
+      setIsBreakTimerRunning(timerStatus.isBreakTimerRunning);
+      setTaskTimer(timerStatus.taskTimer);
+      setActiveTimer(timerStatus.activeTimer);
+      setIsTaskStarted(timerStatus.isTaskStarted);
+      setIsBreakStarted(timerStatus.isBreakStarted);
+      setBreakTimer(timerStatus.breakTimer);
+      setCurrentTaskState(timerStatus.currentTaskState);
+      setShowModal(timerStatus.showModal);
+      setShowStartTimerButton(timerStatus.showStartTimerButton);
+      setConfirmCheckedTask(timerStatus.confirmCheckedTask);
+      setGameMode(timerStatus.gameMode);
+    }
+  }, []);
 
   const handleStart = (variant) => {
     clearInterval(myInterval);
@@ -133,24 +197,35 @@ export default function Timer({ currentTask }) {
       });
     }, 200);
   };
+
   const handleStop = (variant) => {
+    console.log("trying to stop");
+    console.log(variant);
+    console.log(myInterval);
+
     clearInterval(myInterval);
-    if (variant === "task") setIsTaskStarted(false);
-    if (variant === "break") setIsBreakStarted(false);
+    if (variant === "task") {
+      setIsTaskStarted(false);
+      // setIsTaskTimerRunning(false);
+    }
+    if (variant === "break") {
+      setIsBreakStarted(false);
+      // setIsBreakTimerRunning(false);
+    }
   };
 
   const setChecked = (val) => {
     const currentSecRemaining = taskTimer.min * 60 + taskTimer.sec;
     const selectedTaskTime = val.timer * 60;
 
-    console.log(timeBreakpoint);
+    // console.log(timeBreakpoint);
 
-    console.log(
-      "you took ",
-      timeBreakpoint
-        ? timeBreakpoint - currentSecRemaining
-        : currentTaskState.totalTimer * 60 - currentSecRemaining
-    );
+    // console.log(
+    //   "you took ",
+    //   timeBreakpoint
+    //     ? timeBreakpoint - currentSecRemaining
+    //     : currentTaskState.totalTimer * 60 - currentSecRemaining
+    // );
 
     const timeTookInSeconds = timeBreakpoint
       ? timeBreakpoint - currentSecRemaining
@@ -178,7 +253,7 @@ export default function Timer({ currentTask }) {
     });
   };
 
-  const updateTask = () => {
+  const updateTask = async () => {
     console.log("updated");
     console.log(currentTaskState);
 
@@ -189,16 +264,32 @@ export default function Timer({ currentTask }) {
         data: { currentTaskState },
       });
     }
-    updateApiTask();
+    await updateApiTask();
     timeBreakpoint = undefined;
     navigate("/");
+  };
+
+  const removeModal = function () {
+    setShowModal(false);
+  };
+
+  const pauseTask = function () {
+    setIsTaskTimerRunning(false);
+  };
+
+  const continueTask = function () {
+    setIsTaskTimerRunning(true);
   };
 
   let content;
   if (!currentTask) content = <>Nothing here</>;
   else {
     content = (
-      <div className="timers-container">
+      <div
+        className={`timers-container ${
+          mode === "dark" ? "mode2-timers-container" : undefined
+        }`}
+      >
         <div
           className={`timer-container ${
             isTaskTimerRunning ? "active" : undefined
@@ -286,7 +377,6 @@ export default function Timer({ currentTask }) {
               </div>
 
               {currentTaskState.taskGroup.tasks.map((task) => {
-                console.log(task);
                 if (task.isChecked) {
                   return (
                     <div key={task.task} className="task-list-item">
@@ -312,7 +402,11 @@ export default function Timer({ currentTask }) {
                         {isTaskTimerRunning && (
                           <RadioButtonUncheckedIcon
                             disabled={!isTaskTimerRunning}
-                            onClick={() => setChecked(task)}
+                            onClick={() => {
+                              setConfirmCheckedTask(task);
+                              setShowModal("confirm");
+                              // setChecked(task);
+                            }}
                             className="unchecked-btn"
                           />
                         )}
@@ -394,33 +488,94 @@ export default function Timer({ currentTask }) {
             </div>
           )}
           {isBreakTimerRunning && (
-            <div className="break-content">
-              <img
-                className="rest-img"
-                width={200}
-                src={BreakImg}
-                alt="image"
-              />
-              <br />
+            <>
+              <div className="game-btn-container">
+                <p>GAME</p>
+                <button
+                  className={`game-btn game-btn1 ${
+                    gameMode === "TTT" ? "active-game-btn" : undefined
+                  }`}
+                  onClick={() => setGameMode("TTT")}
+                >
+                  TTT
+                </button>
+                <button
+                  className={`game-btn game-btn2 ${
+                    gameMode === "GTN" ? "active-game-btn" : undefined
+                  }`}
+                  onClick={() => setGameMode("GTN")}
+                >
+                  GMN
+                </button>
+                <button
+                  className={`game-btn game-btn-rest ${
+                    !gameMode ? "active-game-btn" : undefined
+                  }`}
+                  onClick={() => {
+                    setGameMode(false);
+                  }}
+                >
+                  Rest
+                </button>
+              </div>
+
+              <div className="break-content">
+                {gameMode === "GTN" ? (
+                  <Game />
+                ) : gameMode === "TTT" ? (
+                  <TicTacToe />
+                ) : (
+                  <img
+                    className="rest-img"
+                    width={200}
+                    src={BreakImg}
+                    alt="image"
+                  />
+                )}
+
+                <br />
+              </div>
               <button
                 className="back-btn"
                 onClick={() => {
-                  setShowModal(true);
+                  setShowModal("break-end");
                   setIsTaskTimerRunning(false);
                   setIsBreakTimerRunning(false);
                 }}
               >
-                &lt;- Home
+                &lt;- Finish
               </button>
-            </div>
+            </>
           )}
         </div>
-        {showModal && (
+        {showModal === "summary" && (
           <Modal
-            activeTimer={activeTimer}
+            modalType={showModal}
             startBreak={startBreak}
             currentTaskState={currentTaskState}
             updateTask={updateTask}
+          />
+        )}
+        {(showModal === "break-end" || showModal === "break-end-auto") && (
+          <Modal
+            modalType={showModal}
+            startBreak={startBreak}
+            currentTaskState={currentTaskState}
+            updateTask={updateTask}
+          />
+        )}
+
+        {showModal === "confirm" && (
+          <Modal
+            modalType={showModal}
+            startBreak={startBreak}
+            currentTaskState={currentTaskState}
+            updateTask={updateTask}
+            setChecked={setChecked}
+            confirmCheckedTask={confirmCheckedTask}
+            removeModal={removeModal}
+            pauseTask={pauseTask}
+            continueTask={continueTask}
           />
         )}
       </div>

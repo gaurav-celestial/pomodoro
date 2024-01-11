@@ -1,11 +1,6 @@
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 
-const GenerateRecentlyCards = ({
-  playTimer,
-  activeTabContent,
-  onClick,
-  mode,
-}) => {
+const GenerateRecentlyCards = ({ playTimer, activeTabContent, onClick }) => {
   return (
     <div className="all-tasks">
       {activeTabContent?.map((taskGroup) => {
@@ -13,9 +8,7 @@ const GenerateRecentlyCards = ({
         return (
           <div
             key={taskGroup.title}
-            className={`task-1 card remaining-tasks-group ${
-              mode === "mode2" ? "card-mode2" : undefined
-            }`}
+            className={`task-1 card remaining-tasks-group`}
           >
             <h5 className="task-title">{taskGroup.title}</h5>
             <p>{taskGroup.desc}</p>
@@ -37,11 +30,7 @@ const GenerateRecentlyCards = ({
               onClick={() => playTimer({ taskGroup, totalTimer })}
             >
               {/* <p> Start Timer {totalTimer} min </p> */}
-              <button
-                className={`play-btn ${
-                  mode === "mode2" ? "mode2-play-btn" : undefined
-                }`}
-              >
+              <button className={`play-btn`}>
                 <div className="time">{totalTimer} min</div>
                 <PlayArrowIcon />
               </button>
@@ -49,12 +38,7 @@ const GenerateRecentlyCards = ({
           </div>
         );
       })}
-      <div
-        onClick={onClick}
-        className={`card add-card-btn ${
-          mode === "mode2" ? "mode2-add-card-btn" : undefined
-        }`}
-      >
+      <div onClick={onClick} className={`card add-card-btn `}>
         + Add Task
       </div>
     </div>

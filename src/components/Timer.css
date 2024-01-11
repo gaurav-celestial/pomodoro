@@ -172,18 +172,102 @@ body {
 }
 
 .break-content {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translateX(-50%) translateY(-30%);
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.break-content img {
+  margin-top: 40px;
 }
 
 .back-btn {
+  position: absolute;
+  top: 15px;
+  right: 40px;
   background-color: transparent;
   color: black;
   font-size: 15px;
 }
 
+.active-game-btn {
+  background-color: #f6b816 !important;
+  color: black !important;
+}
+
 .summary-ul li {
   margin-bottom: 5px;
+}
+
+/* MODES */
+
+.mode2-timers-container .timer-container {
+  background-color: #191919;
+  color: white;
+}
+
+.mode2-timers-container .timer-tasks-card {
+  background-color: #303030;
+  box-shadow: none;
+}
+
+.mode2-timers-container .timer-task-card {
+  background-color: #191919;
+  box-shadow: none;
+}
+
+.mode2-timers-container .time div {
+  background-color: #303030;
+  box-shadow: none;
+}
+
+.mode2-timers-container .start-timer-btn {
+  background-color: #303030;
+}
+
+.mode2-timers-container .active {
+  background-color: #373737;
+}
+
+.mode2-timers-container .back-btn {
+  color: white;
+}
+
+.mode2-timers-container .modal {
+  background-color: #303030;
+  color: white;
+}
+
+.mode2-timers-container .summary-modal-btn {
+  background-color: #191919;
+}
+
+.game-btn {
+  color: rebeccapurple;
+  margin: 3px;
+}
+
+.game-btn-container {
+  position: absolute;
+  top: 15px;
+  left: 15px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.game-btn-container p {
+  margin-right: 10px;
+}
+
+.game-btn {
+  background-color: white;
+  padding: 3px 10px;
+  border-radius: 10px;
+}
+
+.game-btn-rest {
+  position: absolute;
+  top: 35px;
+  left: 70px;
 }

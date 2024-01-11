@@ -3,7 +3,10 @@
   /* height: 200px; */
   box-shadow: rgba(100, 100, 111, 0.2) 0px 3px 14px 0px;
   margin: auto;
-  margin-top: 100px;
+  position: absolute;
+  left: 50%;
+  top: 20%;
+  transform: translate(-50%);
   padding: 30px 0;
   border-radius: 20px;
 }
@@ -60,5 +63,31 @@
 }
 
 .signup-form form label {
-  width: 90px;
+  width: 130px;
+}
+
+/* MODES  */
+
+.mode2-login-container {
+  height: 100vh;
+  width: 100vw;
+  background-color: #191919;
+}
+
+.mode2-form-container {
+  background-color: #303030;
+  box-shadow: none;
+  color: white;
+}
+
+.mode2-form-container a {
+  background-color: #303030;
+  box-shadow: none;
+  color: white;
+}
+
+.mode2-form-container a:hover {
+  background-color: #303030;
+  box-shadow: none;
+  color: white;
 }

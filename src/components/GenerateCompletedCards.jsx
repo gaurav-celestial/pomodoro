@@ -16,9 +16,7 @@ const GenerateCompletedCards = ({ activeTabContent, playTimer }) => {
             <hr className="card-sep" />
             <h5>Tasks</h5>
             {taskGroup?.tasks?.map((task) => {
-              console.log(task);
               totalTimeTook += task.timeTookInSeconds;
-              console.log(totalTimeTook);
               totalTimer = totalTimer + task.timer;
               return (
                 <li key={task.task}>

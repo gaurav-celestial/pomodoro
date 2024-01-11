@@ -12,13 +12,13 @@ export const useTimer = (currentTask, myInterval) => {
   });
 
   const [breakTimer, setBreakTimer] = useState({
-    min: 10,
-    sec: 3,
+    min: Number(currentTaskState.taskGroup.breakTime),
+    sec: 0,
     mili: 1000,
   });
 
   const [activeTimer, setActiveTimer] = useState("task");
-  const [isTaskTimerRunning, setIsTaskTimerRunning] = useState(false); //do true
+  const [isTaskTimerRunning, setIsTaskTimerRunning] = useState(false); // do true
   const [isBreakTimerRunning, setIsBreakTimerRunning] = useState(false);
 
   const [isTaskStarted, setIsTaskStarted] = useState(false);
@@ -55,12 +55,12 @@ export const useTimer = (currentTask, myInterval) => {
     const temp = currentTaskState.taskGroup.tasks.every(
       (task) => task.isChecked
     );
-    if (temp) {
+    if (temp && isTaskTimerRunning) {
+      setShowModal("summary");
       setIsTaskTimerRunning(false);
       console.log("task over");
-      setShowModal(true);
     }
-  }, [currentTaskState]);
+  }, [currentTaskState, isTaskTimerRunning]);
 
   const startBreak = (tempSummaryJsx, totalTimeSavedorWasted) => {
     setShowModal(false);

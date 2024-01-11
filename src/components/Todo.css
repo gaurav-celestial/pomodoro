@@ -122,7 +122,8 @@ hr {
 }
 
 .task-title,
-.task-desc {
+.task-desc,
+.task-break-time {
   margin: 10px 0;
   display: flex;
   /* justify-content: center; */
@@ -131,8 +132,13 @@ hr {
 }
 
 .task-title h4,
-.task-desc h4 {
+.task-desc h4,
+.task-break-time h4 {
   width: 100px;
+}
+
+.break-time {
+  width: 75px;
 }
 
 .task-desc textarea {
@@ -140,4 +146,22 @@ hr {
   padding: 6px 12px;
   border: 1px solid black;
   width: 195px;
+}
+
+/* MODES  */
+
+.mode2-modal {
+  /* font-size: 400px; */
+  background-color: #303030 !important;
+  color: white;
+}
+
+.mode2-modal .todo-ul li {
+  background-color: #191919;
+  box-shadow: none;
+  border: none;
+}
+
+.mode2-modal button {
+  background-color: #191919;
 }

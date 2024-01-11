@@ -1,11 +1,14 @@
 import "./Todo.css";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import DeleteIcon from "@mui/icons-material/Delete";
 import axios from "axios";
+import { useSelector } from "react-redux";
 
 const Form = ({ onRemove, tasksSubmit, setActiveTabToDefault }) => {
   const [currentTask, setCurrentTask] = useState("");
   const [tasks, setTaskGroup] = useState([]);
+
+  const mode = useSelector((state) => state.settings.mode);
 
   const handleCurrentTask = function (e) {
     setCurrentTask(e.target.value);
@@ -24,10 +27,13 @@ const Form = ({ onRemove, tasksSubmit, setActiveTabToDefault }) => {
     const fd = new FormData(e.target);
     const data = Object.fromEntries(fd.entries());
 
+    console.log(data);
+
     const allTasks = {
       id: Math.random(),
       title: data.title,
       desc: data.desc,
+      breakTime: data.breakTime,
       tasks: tasks.map((task, i) => {
         return {
           timer: Number(data["timer" + (i + 1)]),
@@ -55,7 +61,9 @@ const Form = ({ onRemove, tasksSubmit, setActiveTabToDefault }) => {
 
   return (
     <>
-      <div className="todo modal">
+      <div
+        className={`todo modal ${mode === "dark" ? "mode2-modal" : undefined}`}
+      >
         <form onSubmit={submitHandler}>
           <h2 className="add-task-group-btn">Add Task Group</h2>
           <div className="task-title">
@@ -72,6 +80,18 @@ const Form = ({ onRemove, tasksSubmit, setActiveTabToDefault }) => {
             <h4>Description</h4>
             <textarea required name="desc" rows="3"></textarea>
             {/* <input className="add-task-desc" type="text" /> */}
+          </div>
+
+          <div className="task-break-time">
+            <h4>Break Time</h4>
+            <input
+              name="breakTime"
+              required
+              className="break-time"
+              type="number"
+              min="1"
+              max="100"
+            />
           </div>
 
           <hr />
@@ -108,6 +128,7 @@ const Form = ({ onRemove, tasksSubmit, setActiveTabToDefault }) => {
                     type="number"
                     min="1"
                     placeholder="5"
+                    required
                   />
                 </div>
               );
@@ -125,5 +146,4 @@ const Form = ({ onRemove, tasksSubmit, setActiveTabToDefault }) => {
     </>
   );
 };
-
 export default Form;

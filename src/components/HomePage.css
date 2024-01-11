@@ -177,11 +177,11 @@ button {
 }
 
 .current-date {
-  font-size: 20px;
+  font-size: 16px;
 }
 
 .current-date span {
-  font-size: 25px;
+  font-size: 20px;
   font-weight: bold;
 }
 
@@ -332,6 +332,8 @@ button {
 
 .logo-container {
   display: flex;
+  align-items: center;
+  z-index: 999;
 }
 
 .logo-container select {
@@ -352,33 +354,48 @@ button {
 /* MODES */
 
 .mode2-container {
-  background-color: #e4d1a1;
-}
-
-.card-mode2 {
-  background-color: #c7b17b;
-  color: #2c271b;
-}
-
-.mode2-play-btn {
-  background-color: #6f6345;
+  background-color: #191919;
   color: white;
 }
 
-.mode2-add-card-btn {
-  color: #2c271b;
+.mode2-container .tab-btn:not(.mode2-active-tab) {
+  background-color: #191919;
+  color: white;
 }
 
-.mode2-add-card-btn:hover {
-  background-color: #c7b17b;
+.mode2-container .user,
+.mode2-container .logo-container {
+  /* background-color: #191919; */
+  color: white;
+}
+
+.mode2-container .card,
+.mode2-container .no-task-card {
+  background-color: #303030;
+  box-shadow: none;
+  color: white;
+}
+
+.mode2-container .play-btn {
+  /* background-color: #303030; */
+  background-color: #191919;
+  color: white;
+}
+
+.mode2-container .add-card-btn {
+  background-color: #303030;
+}
+
+.mode2-container .add-card-btn:hover {
+  background-color: #191919;
 }
 
 .mode2-active-tab {
-  background-color: #6f6345;
+  background-color: #303030;
   color: white;
 }
 
-.mode2-login-btn {
+/* .mode2-login-btn {
   background-color: #6f6345;
   color: white;
-}
+} */
