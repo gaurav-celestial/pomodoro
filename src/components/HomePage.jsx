@@ -9,25 +9,24 @@ import axios from "axios";
 import GenerateRecentlyCards from "./GenerateRecentlyCards";
 import GenerateCompletedCards from "./GenerateCompletedCards";
 import GenerateIncompletedCards from "./GenerateIncompletedCards";
-import Dropdown from "./Dropdown";
-import Switch from "../small-components/Switch";
+import Dropdown from "../small-components/Dropdown.jsx";
 
 import { useDispatch, useSelector } from "react-redux";
 import { settingsActions } from "../store";
 
 import { timerActions } from "../store/index.js";
 
+import DarkModeIcon from "@mui/icons-material/DarkMode";
+import LightModeIcon from "@mui/icons-material/LightMode";
+
 function Homepage({ handleCurrentTask }) {
+  const navigate = useNavigate();
+  const user = useSelector((state) => state.settings.user);
+
   const [modalState, setModalState] = useState(false);
   const [taskGroups, setTaskGroups] = useState([]);
   const [activeTab, setActiveTab] = useState("Recently");
   const [activeTabContent, setActiveTabContent] = useState();
-  const [user, setUser] = useState({
-    user: "Guest",
-    image: "default",
-    profession: "",
-  });
-
   let timerStatus = useSelector((state) => state.timer?.timerStatus?.payload);
 
   const mode = useSelector((state) => state.settings.mode);
@@ -41,8 +40,6 @@ function Homepage({ handleCurrentTask }) {
   };
 
   const formattedDate = Intl.DateTimeFormat("en-in", options).format(date);
-
-  const navigate = useNavigate();
 
   const closeModal = function () {
     setModalState(false);
@@ -72,37 +69,19 @@ function Homepage({ handleCurrentTask }) {
     ) {
       console.log("here");
       dispatch(timerActions.clearState());
-      console.log(timerStatus?.showModal);
     }
   }, [timerStatus, dispatch, navigate]);
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      if (timerStatus) {
-        navigate("/timer");
-      }
-    }, 100);
-
-    return () => {
-      clearTimeout(timer);
-    };
-  }, [timerStatus, navigate]);
-
-  useEffect(() => {
-    const user = JSON.parse(localStorage.getItem("user"));
-    if (user) setUser(user);
-  }, []);
 
   useEffect(() => {
     async function fetchTaskGroups() {
       const res = await axios({
         method: "get",
-        url: "http://localhost:5000/api/taskGroups",
+        url: `http://localhost:5000/api/taskGroups/${user.id}`,
       });
       setTaskGroups(res.data);
     }
     fetchTaskGroups();
-  }, []);
+  }, [user]);
 
   useEffect(() => {
     if (activeTab === "Recently") {
@@ -138,12 +117,8 @@ function Homepage({ handleCurrentTask }) {
   }, [activeTab, taskGroups]);
 
   const logout = (event) => {
-    localStorage.removeItem("user");
-    setUser({
-      user: "Guest",
-      image: "default",
-      profession: "",
-    });
+    dispatch(settingsActions.removeUser());
+    navigate("/logout");
   };
 
   return (
@@ -156,7 +131,8 @@ function Homepage({ handleCurrentTask }) {
         <div className="header">
           <div className="logo-container">
             <img className="logo" src={Logo} alt="logo" width="70" />
-            <Switch
+            <div
+              className="switch-mode"
               onClick={() => {
                 console.log("switching");
                 dispatch(
@@ -165,7 +141,9 @@ function Homepage({ handleCurrentTask }) {
                     : settingsActions.changeModeToLight()
                 );
               }}
-            />
+            >
+              {mode === "dark" ? <DarkModeIcon /> : <LightModeIcon />}
+            </div>
             <p>{mode === "light" ? "Light" : "Dark"}</p>
           </div>
           <Dropdown user={user} logout={logout} />
@@ -186,7 +164,7 @@ function Homepage({ handleCurrentTask }) {
                   } `
                 }`}
               >
-                Recently
+                To Be Done
               </button>
               <button
                 onClick={() => {
@@ -216,7 +194,7 @@ function Homepage({ handleCurrentTask }) {
                   } `
                 }`}
               >
-                Incompleted
+                Incomplete
               </button>
             </div>
             <div className="tasks">

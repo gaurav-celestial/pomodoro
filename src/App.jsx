@@ -5,11 +5,14 @@ import Homepage from "./components/HomePage";
 import Timer from "./components/Timer";
 import Login from "./components/Login";
 import Signup from "./components/Signup";
-import Game from "./components/Game";
-import Switch from "./small-components/Switch";
 import { useState } from "react";
 import { useSelector } from "react-redux";
-import TicTacToe from "./small-components/TicTacToe/TicTacToe";
+import Settings from "./components/Settings";
+
+import ProtectedRoute from "./small-components/ProtectedRoute";
+import ProtectedRouteTimerRun from "./small-components/ProtectedRouteTimerRun";
+import DisableBackButtonRoute from "./small-components/DisableBackButtonRoute";
+import NotFound from "./small-components/NotFound";
 
 // const router = createBrowserRouter([
 //   { path: "/", element: <Homepage /> },
@@ -32,14 +35,59 @@ const App = () => {
       <Routes>
         <Route
           path="/"
-          element={<Homepage handleCurrentTask={handleCurrentTask} />}
+          element={
+            <ProtectedRoute>
+              <ProtectedRouteTimerRun>
+                <Homepage handleCurrentTask={handleCurrentTask} />
+              </ProtectedRouteTimerRun>
+            </ProtectedRoute>
+          }
         />
-        <Route path="/timer" element={<Timer currentTask={currentTask} />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/signup" element={<Signup />} />
-        <Route path="/game" element={<Game />} />
-        <Route path="/game2" element={<TicTacToe />} />
-        <Route path="/switch" element={<Switch />} />
+        <Route
+          path="/timer"
+          element={
+            <ProtectedRoute>
+              <DisableBackButtonRoute>
+                <Timer currentTask={currentTask} />
+              </DisableBackButtonRoute>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/login"
+          element={
+            <ProtectedRouteTimerRun>
+              <Login />
+            </ProtectedRouteTimerRun>
+          }
+        />
+        <Route
+          path="/signup"
+          element={
+            <ProtectedRouteTimerRun>
+              <Signup />
+            </ProtectedRouteTimerRun>
+          }
+        />
+        <Route
+          path="/settings"
+          element={
+            <ProtectedRoute>
+              <ProtectedRouteTimerRun>
+                <Settings />
+              </ProtectedRouteTimerRun>
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="*"
+          element={
+            <ProtectedRouteTimerRun>
+              <NotFound />
+            </ProtectedRouteTimerRun>
+          }
+        />
       </Routes>
     </Router>
   );

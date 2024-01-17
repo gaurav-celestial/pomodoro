@@ -1,14 +1,15 @@
 import "./Todo.css";
 import { useState } from "react";
-import DeleteIcon from "@mui/icons-material/Delete";
 import axios from "axios";
 import { useSelector } from "react-redux";
+import Task from "./Task";
 
 const Form = ({ onRemove, tasksSubmit, setActiveTabToDefault }) => {
   const [currentTask, setCurrentTask] = useState("");
   const [tasks, setTaskGroup] = useState([]);
 
   const mode = useSelector((state) => state.settings.mode);
+  const user = useSelector((state) => state.settings.user);
 
   const handleCurrentTask = function (e) {
     setCurrentTask(e.target.value);
@@ -31,6 +32,7 @@ const Form = ({ onRemove, tasksSubmit, setActiveTabToDefault }) => {
 
     const allTasks = {
       id: Math.random(),
+      userId: user.id,
       title: data.title,
       desc: data.desc,
       breakTime: data.breakTime,
@@ -52,12 +54,13 @@ const Form = ({ onRemove, tasksSubmit, setActiveTabToDefault }) => {
       });
     }
     updateTasks();
-
     console.log(allTasks);
     onRemove();
     tasksSubmit(allTasks);
     setActiveTabToDefault();
   };
+
+  console.log(tasks);
 
   return (
     <>
@@ -91,7 +94,8 @@ const Form = ({ onRemove, tasksSubmit, setActiveTabToDefault }) => {
               type="number"
               min="1"
               max="100"
-            />
+            />{" "}
+            <p className="tiny-text">mins</p>
           </div>
 
           <hr />
@@ -115,22 +119,21 @@ const Form = ({ onRemove, tasksSubmit, setActiveTabToDefault }) => {
           <ul className="todo-ul">
             {tasks.map((task, i) => {
               return (
-                <div className="list-item" key={i}>
-                  <div>
-                    <li>
-                      {task}
-                      <DeleteIcon className="delete-icon" />
-                    </li>
-                  </div>
-                  <input
-                    name={`timer` + (i + 1)}
-                    className="timer-input"
-                    type="number"
-                    min="1"
-                    placeholder="5"
-                    required
-                  />
-                </div>
+                <Task
+                  onClick={() => {
+                    console.log("clicking");
+
+                    const filteredTasks = tasks.filter((t) => {
+                      console.log(t, task);
+                      return t !== task;
+                    });
+
+                    setTaskGroup(filteredTasks);
+                  }}
+                  task={task}
+                  i={i}
+                  key={i}
+                />
               );
             })}
           </ul>

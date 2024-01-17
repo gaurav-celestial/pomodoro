@@ -6,13 +6,13 @@ export const useTimer = (currentTask, myInterval) => {
   const [showModal, setShowModal] = useState(false);
 
   const [taskTimer, setTaskTimer] = useState({
-    min: currentTaskState.totalTimer || null,
+    min: currentTaskState?.totalTimer || null,
     sec: 0,
     mili: 1000,
   });
 
   const [breakTimer, setBreakTimer] = useState({
-    min: Number(currentTaskState.taskGroup.breakTime),
+    min: Number(currentTaskState?.taskGroup.breakTime),
     sec: 0,
     mili: 1000,
   });
@@ -23,8 +23,6 @@ export const useTimer = (currentTask, myInterval) => {
 
   const [isTaskStarted, setIsTaskStarted] = useState(false);
   const [isBreakStarted, setIsBreakStarted] = useState(true);
-
-  const [summaryJsx, setSummaryJsx] = useState("");
 
   let timerNo = isTaskTimerRunning ? setTaskTimer : setBreakTimer;
 
@@ -52,7 +50,7 @@ export const useTimer = (currentTask, myInterval) => {
   };
 
   useEffect(() => {
-    const temp = currentTaskState.taskGroup.tasks.every(
+    const temp = currentTaskState?.taskGroup?.tasks.every(
       (task) => task.isChecked
     );
     if (temp && isTaskTimerRunning) {
@@ -62,7 +60,7 @@ export const useTimer = (currentTask, myInterval) => {
     }
   }, [currentTaskState, isTaskTimerRunning]);
 
-  const startBreak = (tempSummaryJsx, totalTimeSavedorWasted) => {
+  const startBreak = () => {
     setShowModal(false);
     setActiveTimer("break");
 
@@ -73,22 +71,6 @@ export const useTimer = (currentTask, myInterval) => {
     // });
 
     setIsBreakTimerRunning(true);
-
-    const finalSummaryJsx = (
-      <>
-        {tempSummaryJsx}
-        {totalTimeSavedorWasted >= 0 ? (
-          <li className="saved">
-            Total {totalTimeSavedorWasted} seconds saved
-          </li>
-        ) : (
-          <li className="wasted">
-            Total {Math.abs(totalTimeSavedorWasted)} seconds wasted
-          </li>
-        )}
-      </>
-    );
-    setSummaryJsx(finalSummaryJsx);
   };
 
   return {
@@ -103,7 +85,6 @@ export const useTimer = (currentTask, myInterval) => {
     startTimer,
     currentTaskState,
     showModal,
-    summaryJsx,
     startBreak,
     timerNo,
     setIsBreakTimerRunning,

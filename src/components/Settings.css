@@ -1,0 +1,47 @@
+.settingsForm {
+  box-shadow: rgba(100, 100, 111, 0.2) 0px 3px 14px 0px;
+  border-radius: 20px;
+  padding: 30px 30px;
+  position: absolute;
+  left: 50%;
+  top: 10%;
+  transform: translate(-50%);
+  text-align: center;
+  background-color: white;
+  /* display: flex; */
+}
+
+.settings-submit-btn {
+  margin-right: 15px;
+  font-size: 14px;
+  background-color: #f6b816;
+  color: black;
+  border-radius: 20px;
+  padding: 5px 15px;
+}
+
+.settingsForm div {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 20px;
+}
+
+.settingsForm label {
+  width: 100px;
+}
+
+.settingsForm input,
+.settingsForm select {
+  border-radius: 5px;
+  padding: 5px 15px;
+  border: 1px solid;
+}
+
+.settingsForm-container {
+  width: 100vw;
+  height: 100vh;
+  /* background-color: aqua; */
+}
+
+/* MODES */

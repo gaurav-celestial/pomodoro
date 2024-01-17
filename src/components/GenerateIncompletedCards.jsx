@@ -1,5 +1,4 @@
 const GenerateIncompletedCards = ({ playTimer, activeTabContent, mode }) => {
-  console.log(activeTabContent);
   let totalTimeTook = 0;
 
   return (
@@ -16,9 +15,7 @@ const GenerateIncompletedCards = ({ playTimer, activeTabContent, mode }) => {
             <hr className="card-sep" />
             <h5>Tasks</h5>
             {taskGroup?.tasks?.map((task) => {
-              console.log(task);
               totalTimeTook += task.timeTookInSeconds;
-              console.log(totalTimeTook);
               totalTimer = totalTimer + task.timer;
               return (
                 <li key={task.task}>

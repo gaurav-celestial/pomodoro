@@ -3,8 +3,12 @@ import "./Signup.css";
 import { Link, useNavigate } from "react-router-dom";
 import { useRef } from "react";
 import { useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
+import { settingsActions } from "../store";
 
 const Login = () => {
+  const dispatch = useDispatch();
+
   const mode = useSelector((state) => state.settings.mode);
 
   const userRef = useRef();
@@ -25,13 +29,6 @@ const Login = () => {
 
   const validatePassword = function () {
     const passVal = passRef.current.value;
-    console.log(
-      passVal.includes("!") ||
-        passVal.includes("@") ||
-        passVal.includes("$") ||
-        passVal.includes("%") ||
-        passVal.includes("&")
-    );
 
     if (passVal.length < 6) {
       return "Minimum 6 characters required in password";
@@ -39,17 +36,7 @@ const Login = () => {
     if (passVal.includes(" ")) {
       return "Password must not contain spaces";
     }
-    if (
-      !(
-        passVal.includes("!") ||
-        passVal.includes("@") ||
-        passVal.includes("$") ||
-        passVal.includes("%") ||
-        passVal.includes("&")
-      )
-    ) {
-      return "Password Must contain alphanumeric values";
-    }
+
     return false;
   };
 
@@ -72,8 +59,7 @@ const Login = () => {
           password: passRef.current.value,
         },
       });
-      console.log(res.data.user);
-      localStorage.setItem("user", JSON.stringify(res.data.user));
+      dispatch(settingsActions.setUser(res.data.user));
       navigate("/");
     } catch (err) {
       alert(err.response?.data.message || err.message);

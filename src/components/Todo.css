@@ -113,6 +113,7 @@ hr {
 
 .delete-icon {
   justify-self: flex-end;
+  cursor: pointer;
 }
 
 .submit-btn-container {
@@ -164,4 +165,10 @@ hr {
 
 .mode2-modal button {
   background-color: #191919;
+}
+
+.tiny-text {
+  font-size: 14px;
+  margin-left: -5px;
+  opacity: 0.8;
 }

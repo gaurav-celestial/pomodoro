@@ -195,6 +195,36 @@ body {
   color: black !important;
 }
 
+.game-btn {
+  color: rebeccapurple;
+  margin: 3px;
+}
+
+.game-btn-container {
+  position: absolute;
+  top: 15px;
+  left: 15px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.game-btn-container p {
+  margin-right: 10px;
+}
+
+.game-btn {
+  background-color: white;
+  padding: 3px 10px;
+  border-radius: 10px;
+}
+
+.game-btn-rest {
+  position: absolute;
+  top: 35px;
+  left: 70px;
+}
+
 .summary-ul li {
   margin-bottom: 5px;
 }
@@ -240,34 +270,4 @@ body {
 
 .mode2-timers-container .summary-modal-btn {
   background-color: #191919;
-}
-
-.game-btn {
-  color: rebeccapurple;
-  margin: 3px;
-}
-
-.game-btn-container {
-  position: absolute;
-  top: 15px;
-  left: 15px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.game-btn-container p {
-  margin-right: 10px;
-}
-
-.game-btn {
-  background-color: white;
-  padding: 3px 10px;
-  border-radius: 10px;
-}
-
-.game-btn-rest {
-  position: absolute;
-  top: 35px;
-  left: 70px;
 }

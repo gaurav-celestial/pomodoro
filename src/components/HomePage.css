@@ -351,6 +351,13 @@ button {
   font-weight: 100;
 }
 
+.switch-mode {
+  padding: 5px;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
 /* MODES */
 
 .mode2-container {

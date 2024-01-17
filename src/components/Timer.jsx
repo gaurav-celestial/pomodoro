@@ -15,6 +15,7 @@ import TicTacToe from "../small-components/TicTacToe/TicTacToe.jsx";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import { timerActions } from "../store/index.js";
+import Summary from "../small-components/Summary.jsx";
 
 let myInterval;
 let timeBreakpoint;
@@ -33,6 +34,7 @@ export default function Timer({ currentTask }) {
 
   const [gameMode, setGameMode] = useState(false);
   const [confirmCheckedTask, setConfirmCheckedTask] = useState();
+  const [fetchTimer, setFetchTimer] = useState(true);
 
   const {
     isTaskTimerRunning,
@@ -46,7 +48,6 @@ export default function Timer({ currentTask }) {
     startTimer,
     currentTaskState,
     showModal,
-    summaryJsx,
     startBreak,
     timerNo,
     setIsBreakTimerRunning,
@@ -88,13 +89,15 @@ export default function Timer({ currentTask }) {
 
       setCurrentTaskState((prev) => {
         const tasksArr = prev.taskGroup.tasks.map((task) => {
+          console.log(task);
           if (task.isChecked) {
             console.log("ischcked");
             return task;
           } else {
             console.log("isnotchcked");
-            task.isChecked = false;
-            return task;
+            const newTask = { ...task, isChecked: false };
+            // task.isChecked = false;
+            return newTask;
           }
         });
         console.log(tasksArr);
@@ -124,26 +127,28 @@ export default function Timer({ currentTask }) {
     return () => {
       clearInterval(myInterval);
 
-      dispatch(
-        timerActions.updateState({
-          payload: {
-            isTaskTimerRunning,
-            isBreakTimerRunning,
-            taskTimer,
-            activeTimer,
-            isTaskStarted,
-            isBreakStarted,
-            breakTimer,
-            currentTaskState,
-            showModal,
-            showStartTimerButton,
-            confirmCheckedTask,
-            gameMode,
-            myInterval,
-            timeBreakpoint,
-          },
-        })
-      );
+      if (fetchTimer) {
+        dispatch(
+          timerActions.updateState({
+            payload: {
+              isTaskTimerRunning,
+              isBreakTimerRunning,
+              taskTimer,
+              activeTimer,
+              isTaskStarted,
+              isBreakStarted,
+              breakTimer,
+              currentTaskState,
+              showModal,
+              showStartTimerButton,
+              confirmCheckedTask,
+              gameMode,
+              myInterval,
+              timeBreakpoint,
+            },
+          })
+        );
+      }
     };
   }, [
     isTaskTimerRunning,
@@ -168,10 +173,15 @@ export default function Timer({ currentTask }) {
     showStartTimerButton,
     confirmCheckedTask,
     gameMode,
+    fetchTimer,
   ]);
 
   useEffect(() => {
-    if (timerStatus || currentTaskState === timerStatus?.currentTaskState) {
+    if (
+      (timerStatus || currentTaskState === timerStatus?.currentTaskState) &&
+      fetchTimer
+    ) {
+      console.log("shoudl set");
       setIsTaskTimerRunning(timerStatus.isTaskTimerRunning);
       setIsBreakTimerRunning(timerStatus.isBreakTimerRunning);
       setTaskTimer(timerStatus.taskTimer);
@@ -281,8 +291,20 @@ export default function Timer({ currentTask }) {
     setIsTaskTimerRunning(true);
   };
 
+  const cancelFetchingTimer = function () {
+    setFetchTimer(false);
+  };
+
+  const continueBreak = function () {
+    setIsBreakTimerRunning(true);
+  };
+
+  const showBreakModal = function () {
+    setShowModal("break-end");
+  };
+
   let content;
-  if (!currentTask) content = <>Nothing here</>;
+  if (!currentTaskState) content = <>Nothing here</>;
   else {
     content = (
       <div
@@ -420,7 +442,11 @@ export default function Timer({ currentTask }) {
             </ul>
           </div>
 
-          <ul className="summary-ul">{summaryJsx}</ul>
+          <ul className="summary-ul">
+            {isBreakTimerRunning && (
+              <Summary currentTaskState={currentTaskState} />
+            )}
+          </ul>
         </div>
 
         <div
@@ -538,7 +564,7 @@ export default function Timer({ currentTask }) {
               <button
                 className="back-btn"
                 onClick={() => {
-                  setShowModal("break-end");
+                  setShowModal("confirm-end");
                   setIsTaskTimerRunning(false);
                   setIsBreakTimerRunning(false);
                 }}
@@ -562,6 +588,8 @@ export default function Timer({ currentTask }) {
             startBreak={startBreak}
             currentTaskState={currentTaskState}
             updateTask={updateTask}
+            cancelFetchingTimer={cancelFetchingTimer}
+            removeModal={removeModal}
           />
         )}
 
@@ -576,6 +604,15 @@ export default function Timer({ currentTask }) {
             removeModal={removeModal}
             pauseTask={pauseTask}
             continueTask={continueTask}
+          />
+        )}
+        {showModal === "confirm-end" && (
+          <Modal
+            currentTaskState={currentTaskState}
+            modalType={showModal}
+            removeModal={removeModal}
+            continueBreak={continueBreak}
+            showBreakModal={showBreakModal}
           />
         )}
       </div>
