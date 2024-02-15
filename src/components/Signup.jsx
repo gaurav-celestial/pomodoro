@@ -69,14 +69,14 @@ const Signup = () => {
         throw new Error(confirmPasswordError);
       }
 
-      await axios({
+      const res = await axios({
         method: "post",
         url: "http://localhost:5000/api/signup",
         data,
       });
       navigate("/login");
     } catch (err) {
-      alert(err);
+      alert(err.response.data);
     }
   };
 

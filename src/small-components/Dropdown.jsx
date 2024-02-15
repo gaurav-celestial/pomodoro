@@ -18,7 +18,7 @@ const Dropdown = ({ user, logout }) => {
         <div className="menu-toggle"></div>
         <div className="profile" onClick={handleClick}>
           <div className="user">
-            <h3>{user.user}</h3>
+            <h3>{user.username}</h3>
             <p>@{user.profession}</p>
           </div>
 

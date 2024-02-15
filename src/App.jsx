@@ -27,8 +27,11 @@ const App = () => {
   const [currentTask, setCurrentTask] = useState(null);
 
   const handleCurrentTask = (val) => {
+    console.log(val);
     setCurrentTask(val);
   };
+
+  console.log(currentTask);
 
   return (
     <Router>

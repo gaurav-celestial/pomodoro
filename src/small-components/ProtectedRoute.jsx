@@ -7,6 +7,7 @@ const ProtectedRoute = ({ children }) => {
   let location = useLocation();
 
   if (!user) {
+    console.log("navigating to login");
     return <Navigate to="/login" state={{ from: location }} replace />;
   }
   return children;

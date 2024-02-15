@@ -1,3 +1,4 @@
+import axios from "axios";
 import { useEffect, useState } from "react";
 
 export const useTimer = (currentTask, myInterval) => {
@@ -7,6 +8,7 @@ export const useTimer = (currentTask, myInterval) => {
 
   const [taskTimer, setTaskTimer] = useState({
     min: currentTaskState?.totalTimer || null,
+    // min: 1 || null,
     sec: 0,
     mili: 1000,
   });
@@ -53,24 +55,29 @@ export const useTimer = (currentTask, myInterval) => {
     const temp = currentTaskState?.taskGroup?.tasks.every(
       (task) => task.isChecked
     );
+
     if (temp && isTaskTimerRunning) {
       setShowModal("summary");
       setIsTaskTimerRunning(false);
-      console.log("task over");
     }
   }, [currentTaskState, isTaskTimerRunning]);
 
   const startBreak = () => {
     setShowModal(false);
     setActiveTimer("break");
-
-    // setTaskTimer({
-    //   min: currentTaskState.totalTimer,
-    //   sec: 0,
-    //   mili: 0,
-    // });
-
     setIsBreakTimerRunning(true);
+    console.log(currentTaskState);
+
+    async function fetchTaskGroups() {
+      await axios({
+        method: "put",
+        url: `http://localhost:5000/api/taskGroups/${currentTaskState.taskGroup.id}`,
+        data: {
+          currentTaskState,
+        },
+      });
+    }
+    fetchTaskGroups();
   };
 
   return {

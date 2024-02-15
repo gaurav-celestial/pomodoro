@@ -19,7 +19,6 @@ const Form = ({ onRemove, tasksSubmit, setActiveTabToDefault }) => {
     setTaskGroup((prev) => {
       return [...prev, currentTask];
     });
-
     setCurrentTask("");
   };
 
@@ -28,10 +27,7 @@ const Form = ({ onRemove, tasksSubmit, setActiveTabToDefault }) => {
     const fd = new FormData(e.target);
     const data = Object.fromEntries(fd.entries());
 
-    console.log(data);
-
     const allTasks = {
-      id: Math.random(),
       userId: user.id,
       title: data.title,
       desc: data.desc,
@@ -45,18 +41,18 @@ const Form = ({ onRemove, tasksSubmit, setActiveTabToDefault }) => {
     };
 
     async function updateTasks() {
-      await axios({
+      const res = await axios({
         method: "POST",
         url: "http://localhost:5000/api/taskGroups",
         data: {
           allTasks,
         },
       });
+      console.log(res.data);
+      tasksSubmit(res.data);
     }
     updateTasks();
-    console.log(allTasks);
     onRemove();
-    tasksSubmit(allTasks);
     setActiveTabToDefault();
   };
 

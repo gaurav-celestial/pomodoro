@@ -1,7 +1,6 @@
 import "./Homepage.css";
 
 import { useEffect, useState } from "react";
-// import ProfileImg from "../assets/profile.jpg";
 import Logo from "../assets/logo.png";
 import Todo from "./Todo";
 import { useNavigate } from "react-router-dom";
@@ -54,6 +53,7 @@ function Homepage({ handleCurrentTask }) {
   };
 
   const playTimer = (val) => {
+    console.log(val);
     handleCurrentTask(val);
     navigate(`/timer`);
   };

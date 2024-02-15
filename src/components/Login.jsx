@@ -59,10 +59,15 @@ const Login = () => {
           password: passRef.current.value,
         },
       });
+
+      console.log(res.data);
+      if (res.data === "Invalid Credentials") throw new Error(res.data);
+
       dispatch(settingsActions.setUser(res.data.user));
       navigate("/");
     } catch (err) {
-      alert(err.response?.data.message || err.message);
+      console.log(err);
+      alert(err.response?.data || err.message);
     }
   };
 

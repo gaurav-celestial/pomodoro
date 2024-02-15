@@ -8,7 +8,6 @@ import RadioButtonUncheckedIcon from "@mui/icons-material/RadioButtonUnchecked";
 import RadioButtonCheckedIcon from "@mui/icons-material/RadioButtonChecked";
 
 import { useTimer } from "../hooks/useTimer.jsx";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import Game from "./Game.jsx";
 import TicTacToe from "../small-components/TicTacToe/TicTacToe.jsx";
@@ -26,11 +25,6 @@ export default function Timer({ currentTask }) {
 
   const mode = useSelector((state) => state.settings.mode);
   let timerStatus = useSelector((state) => state.timer?.timerStatus?.payload);
-
-  // if (timerStatus)
-  //   console.log(
-  //     timerStatus.currentTaskState.taskGroup.id === currentTask.taskGroup.id
-  //   );
 
   const [gameMode, setGameMode] = useState(false);
   const [confirmCheckedTask, setConfirmCheckedTask] = useState();
@@ -63,6 +57,8 @@ export default function Timer({ currentTask }) {
     setCurrentTaskState,
   } = useTimer(currentTask, myInterval, timeBreakpoint);
 
+  console.log(currentTaskState);
+
   useEffect(() => {
     if (isBreakTimerRunning) setShowStartTimerButton(false);
     if (isTaskTimerRunning) setShowStartTimerButton(true);
@@ -86,22 +82,15 @@ export default function Timer({ currentTask }) {
         sec: 0,
         mili: 1000,
       });
-
       setCurrentTaskState((prev) => {
         const tasksArr = prev.taskGroup.tasks.map((task) => {
-          console.log(task);
           if (task.isChecked) {
-            console.log("ischcked");
             return task;
           } else {
-            console.log("isnotchcked");
             const newTask = { ...task, isChecked: false };
-            // task.isChecked = false;
             return newTask;
           }
         });
-        console.log(tasksArr);
-        // return prev;
         return {
           ...prev,
           taskGroup: { ...prev.taskGroup, tasks: tasksArr },
@@ -113,14 +102,7 @@ export default function Timer({ currentTask }) {
     if (breakTimer.min === 0 && breakTimer.sec === 0) {
       setIsTaskTimerRunning(false);
       setIsBreakTimerRunning(false);
-
-      // setBreakTimer({
-      //   min: 10,
-      //   sec: 59,
-      //   mili: 1000,
-      // });
       setShowModal("break-end-auto");
-      // setActiveTimer("task");
       console.log("break over");
     }
 
@@ -181,7 +163,6 @@ export default function Timer({ currentTask }) {
       (timerStatus || currentTaskState === timerStatus?.currentTaskState) &&
       fetchTimer
     ) {
-      console.log("shoudl set");
       setIsTaskTimerRunning(timerStatus.isTaskTimerRunning);
       setIsBreakTimerRunning(timerStatus.isBreakTimerRunning);
       setTaskTimer(timerStatus.taskTimer);
@@ -209,10 +190,6 @@ export default function Timer({ currentTask }) {
   };
 
   const handleStop = (variant) => {
-    console.log("trying to stop");
-    console.log(variant);
-    console.log(myInterval);
-
     clearInterval(myInterval);
     if (variant === "task") {
       setIsTaskStarted(false);
@@ -227,15 +204,6 @@ export default function Timer({ currentTask }) {
   const setChecked = (val) => {
     const currentSecRemaining = taskTimer.min * 60 + taskTimer.sec;
     const selectedTaskTime = val.timer * 60;
-
-    // console.log(timeBreakpoint);
-
-    // console.log(
-    //   "you took ",
-    //   timeBreakpoint
-    //     ? timeBreakpoint - currentSecRemaining
-    //     : currentTaskState.totalTimer * 60 - currentSecRemaining
-    // );
 
     const timeTookInSeconds = timeBreakpoint
       ? timeBreakpoint - currentSecRemaining
@@ -264,17 +232,6 @@ export default function Timer({ currentTask }) {
   };
 
   const updateTask = async () => {
-    console.log("updated");
-    console.log(currentTaskState);
-
-    async function updateApiTask() {
-      await axios({
-        method: "put",
-        url: "http://localhost:5000/api/taskGroups",
-        data: { currentTaskState },
-      });
-    }
-    await updateApiTask();
     timeBreakpoint = undefined;
     navigate("/");
   };
